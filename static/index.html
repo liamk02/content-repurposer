@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Repurposer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b1120;
+    --panel: #121a2e;
+    --text: #e8ecf5;
+    --muted: #9aa5b8;
+    --accent: #4f9dff;
+    --accent-ink: #0b1120;
+    --border: #22304d;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+
+  header { border-bottom: 1px solid var(--border); padding: 24px 0; }
+  header h1 { font-size: 1.3rem; font-weight: 700; }
+  header p { color: var(--muted); font-size: 0.9rem; margin-top: 6px; max-width: 60ch; }
+
+  main { padding: 28px 0 60px; }
+
+  textarea {
+    width: 100%;
+    min-height: 220px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 0.92rem;
+    resize: vertical;
+  }
+  textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+  .row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .char-count { font-size: 0.8rem; color: var(--muted); }
+
+  .btn {
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 11px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+  }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+    font-size: 0.78rem;
+    padding: 6px 12px;
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+
+  #error {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: rgba(255, 90, 90, 0.12);
+    border: 1px solid rgba(255, 90, 90, 0.4);
+    color: #ff9a9a;
+    font-size: 0.9rem;
+  }
+
+  #results { margin-top: 32px; }
+  .out-section { margin-bottom: 28px; }
+  .out-section h2 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .out-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    font-size: 0.92rem;
+  }
+  .out-card-foot {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap">
+      <h1>Content Repurposer</h1>
+      <p>
+        Paste in a blog post, transcript, or article. Get back a summary,
+        3 social posts, and an email blurb - one Claude call, several formats.
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <textarea id="content" placeholder="Paste your content here…" maxlength="8000"></textarea>
+    <div class="row">
+      <span class="char-count"><span id="count">0</span> / 8000</span>
+      <button id="go-btn" class="btn">Repurpose</button>
+    </div>
+
+    <div id="error" hidden></div>
+    <div id="results" hidden>
+      <div class="out-section">
+        <h2>Summary</h2>
+        <div id="out-summary"></div>
+      </div>
+      <div class="out-section">
+        <h2>Social posts</h2>
+        <div id="out-posts"></div>
+      </div>
+      <div class="out-section">
+        <h2>Email blurb</h2>
+        <div id="out-email"></div>
+      </div>
+    </div>
+  </main>
+
+<script>
+  const textarea = document.getElementById("content");
+  const count = document.getElementById("count");
+  const goBtn = document.getElementById("go-btn");
+  const errorEl = document.getElementById("error");
+  const resultsEl = document.getElementById("results");
+  const summaryEl = document.getElementById("out-summary");
+  const postsEl = document.getElementById("out-posts");
+  const emailEl = document.getElementById("out-email");
+
+  textarea.addEventListener("input", () => {
+    count.textContent = textarea.value.length;
+  });
+
+  function makeCard(text) {
+    const card = document.createElement("div");
+    card.className = "out-card";
+    const body = document.createElement("div");
+    body.textContent = text;
+    card.appendChild(body);
+
+    const foot = document.createElement("div");
+    foot.className = "out-card-foot";
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "btn btn-ghost";
+    copyBtn.textContent = "Copy";
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Copied";
+        setTimeout(() => { copyBtn.textContent = "Copy"; }, 1500);
+      } catch (err) {
+        copyBtn.textContent = "Couldn't copy";
+      }
+    });
+    foot.appendChild(copyBtn);
+    card.appendChild(foot);
+    return card;
+  }
+
+  goBtn.addEventListener("click", async () => {
+    const content = textarea.value.trim();
+    errorEl.hidden = true;
+    resultsEl.hidden = true;
+    if (!content) {
+      errorEl.textContent = "Paste in some content first.";
+      errorEl.hidden = false;
+      return;
+    }
+
+    goBtn.disabled = true;
+    goBtn.textContent = "Repurposing…";
+
+    try {
+      const res = await fetch("/api/repurpose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorEl.textContent = data.error || "Something went wrong.";
+        errorEl.hidden = false;
+        return;
+      }
+
+      summaryEl.innerHTML = "";
+      summaryEl.appendChild(makeCard(data.summary));
+
+      postsEl.innerHTML = "";
+      data.social_posts.forEach((post) => postsEl.appendChild(makeCard(post)));
+
+      emailEl.innerHTML = "";
+      emailEl.appendChild(makeCard(data.email_blurb));
+
+      resultsEl.hidden = false;
+    } catch (err) {
+      errorEl.textContent = "Couldn't reach the server — check your connection and try again.";
+      errorEl.hidden = false;
+    } finally {
+      goBtn.disabled = false;
+      goBtn.textContent = "Repurpose";
+    }
+  });
+</script>
+
+</body>
+</html>
