@@ -62,6 +62,14 @@ def index():
     return send_from_directory(app.static_folder, "index.html")
 
 
+@app.route("/api/health")
+def health():
+    # No Claude API call here - a liveness check should never cost money.
+    response = jsonify({"status": "ok", "service": "content-repurposer"})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
+
 @app.route("/api/repurpose", methods=["POST"])
 @limiter.limit("10 per hour")
 def repurpose():
