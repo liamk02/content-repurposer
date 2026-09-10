@@ -68,6 +68,17 @@
   .out-card { padding: 20px 0; border-top: 1px solid var(--line); white-space: pre-wrap; color: var(--ink-soft); font-size: 0.95rem; }
   .out-card-foot { display: flex; justify-content: flex-end; margin-top: 14px; }
   .out-section .out-card:last-child { border-bottom: 1px solid var(--line); }
+  /* Sample inputs. The tool takes long-form text, which nobody has to hand
+     when they land here, so give them something to run it on. */
+  .examples { margin-top: 24px; }
+  .examples .label { display: block; margin-bottom: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
+    font-family: var(--sans); font-size: 0.87rem; padding: 10px 14px; cursor: pointer;
+    transition: border-color 160ms cubic-bezier(0,0,0.2,1), color 160ms cubic-bezier(0,0,0.2,1);
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
   footer { padding: 32px 24px; text-align: center; }
   @media (max-width: 600px) { h1 { font-size: 2.1rem; } }
 </style>
@@ -94,6 +105,14 @@
       <button id="go-btn" class="btn btn-solid">Repurpose</button>
     </div>
 
+    <section class="examples" id="examples">
+      <p class="label">No text to hand? Load a sample</p>
+      <div class="chips">
+        <button type="button" class="chip" data-sample="opinion">A short opinion piece</button>
+        <button type="button" class="chip" data-sample="transcript">A meeting transcript</button>
+      </div>
+    </section>
+
     <div id="error" hidden></div>
     <div id="results" hidden>
       <div class="out-section">
@@ -116,8 +135,11 @@
 
   <footer><span class="label">&copy; Kvarzell Consulting</span></footer>
 
+<script type="application/json" id="samples">{"opinion": "Most small businesses do not have an AI problem. They have a plumbing problem. Orders arrive by email, get retyped into a spreadsheet, then retyped again into an invoicing tool. Every one of those steps is a place where a number gets transposed or a job quietly goes missing.\n\nWhen people say they want AI, what they usually want is for the retyping to stop. The interesting work is not picking a clever model. It is mapping where information actually enters the business, where a human is genuinely making a judgement call, and where someone is just moving text from one box to another. Automate the second kind and leave the first alone.\n\nThat distinction is worth more than any specific tool, and it is the first thing I look for on a discovery call. Businesses that get it right free up hours a week and stop losing orders in the gaps. Businesses that skip it end up with a chatbot nobody uses bolted onto the same broken process, and conclude that AI does not work for them.\n\nThe uncomfortable part is that the mapping is unglamorous. It looks like sitting with the person who does the retyping and watching them work for an hour. No demo, no model selection, no architecture diagram. But it is the step that decides whether the rest of the project is worth doing at all.", "transcript": "Right, so this is the weekly ops call, seventh of September. Three things on the list.\n\nFirst, the Jordbro warehouse. We are still seeing pick errors on the chilled lines, about two percent, which is roughly double where we were in June. Anna went through the last thirty and reckons most of them trace back to stock being moved without a scan. So the system sends the picker to a location that is already empty. Fix is not technology, it is getting the scan discipline back. Anna is running a refresher with the late shift on Thursday.\n\nSecond, the November push. Sales are forecasting somewhere between thirty and forty percent above a normal month for weeks 45 through 48. Current headcount does not cover that. Erik is going to price up agency cover versus overtime and bring numbers to next week. My instinct is we decide this by the end of the month or we will not get the good agency people.\n\nThird, the supplier situation. Two of the chilled suppliers have missed the shelf life requirement twice each this quarter. Under the procedure that puts them into a review, not automatic delisting. I want the review done properly this time with a named contact on both sides, because last year we let this drift and it cost us in the autumn.\n\nActions then. Anna on the scan refresher. Erik on the staffing numbers for next week. I will handle the supplier reviews. Anything else? No. Good, thanks everyone."}</script>
 <script>
   const textarea = document.getElementById("content");
+  const examples = document.getElementById("examples");
+  const SAMPLES = JSON.parse(document.getElementById("samples").textContent);
   const count = document.getElementById("count");
   const goBtn = document.getElementById("go-btn");
   const errorEl = document.getElementById("error");
@@ -153,6 +175,15 @@
     card.appendChild(foot);
     return card;
   }
+
+  // Load the sample and run it - one click to a result, not two.
+  examples.addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    textarea.value = SAMPLES[chip.dataset.sample];
+    count.textContent = textarea.value.length;
+    goBtn.click();
+  });
 
   goBtn.addEventListener("click", async () => {
     const content = textarea.value.trim();
