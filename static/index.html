@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Content Repurposer · Kvarzell Consulting</title>
+<title>Innehåll som återanvänds · Kvarzell Consulting</title>
 <link rel="icon" href="mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
@@ -42,9 +42,7 @@
 
   header { position: absolute; inset: 0 0 auto 0; height: 64px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-  .brand img { width: 24px; height: 24px; }
   .brand .label { color: var(--ink); }
-  .brand .label span { color: var(--muted); }
 
   main { flex: 1; width: 100%; max-width: 720px; margin: 0 auto; padding: 128px 24px 60px; }
   h1 { font-family: var(--serif); font-weight: 300; font-size: 2.6rem; line-height: 1.08; letter-spacing: -0.01em; margin-top: 16px; }
@@ -88,28 +86,27 @@
 
   <header>
     <a class="brand" href="https://kvarzellconsulting.com">
-      <img src="mark.png" alt="">
-      <span class="label">Kvarzell <span>Consulting</span></span>
+      <span class="label">Kvarzell Consulting</span>
     </a>
-    <a class="btn" href="https://kvarzellconsulting.com">&larr; Back to site</a>
+    <a class="btn" href="https://kvarzellconsulting.com">&larr; Tillbaka till sidan</a>
   </header>
 
   <main>
-    <p class="label">System &middot; Content Repurposer</p>
-    <h1>One piece in. Several out.</h1>
-    <p class="lede">Paste a blog post, transcript, or article. Get back a summary, three social posts, and an email blurb from a single pass.</p>
+    <p class="label">System &middot; Innehåll som återanvänds</p>
+    <h1>En text in. Flera ut.</h1>
+    <p class="lede">Klistra in ett blogginlägg, en transkribering eller en artikel. Du får tillbaka en sammanfattning, tre inlägg för sociala medier och en text till ett mejlutskick.</p>
 
-    <textarea id="content" placeholder="Paste your content here" maxlength="8000"></textarea>
+    <textarea id="content" placeholder="Klistra in din text här" maxlength="8000"></textarea>
     <div class="row">
       <span class="label"><span id="count">0</span> / 8000</span>
-      <button id="go-btn" class="btn btn-solid">Repurpose</button>
+      <button id="go-btn" class="btn btn-solid">Skapa</button>
     </div>
 
     <section class="examples" id="examples">
-      <p class="label">No text to hand? Load a sample</p>
+      <p class="label">Har du ingen text? Ladda ett exempel</p>
       <div class="chips">
-        <button type="button" class="chip" data-sample="opinion">A short opinion piece</button>
-        <button type="button" class="chip" data-sample="transcript">A meeting transcript</button>
+        <button type="button" class="chip" data-sample="opinion">En kort krönika</button>
+        <button type="button" class="chip" data-sample="transcript">En mötesanteckning</button>
       </div>
     </section>
 
@@ -117,17 +114,17 @@
     <div id="results" hidden>
       <div class="out-section">
         <p class="label">01</p>
-        <h2>Summary</h2>
+        <h2>Sammanfattning</h2>
         <div id="out-summary"></div>
       </div>
       <div class="out-section">
         <p class="label">02</p>
-        <h2>Social posts</h2>
+        <h2>Inlägg för sociala medier</h2>
         <div id="out-posts"></div>
       </div>
       <div class="out-section">
         <p class="label">03</p>
-        <h2>Email blurb</h2>
+        <h2>Text till mejlutskick</h2>
         <div id="out-email"></div>
       </div>
     </div>
@@ -135,7 +132,7 @@
 
   <footer><span class="label">&copy; Kvarzell Consulting</span></footer>
 
-<script type="application/json" id="samples">{"opinion": "Most small businesses do not have an AI problem. They have a plumbing problem. Orders arrive by email, get retyped into a spreadsheet, then retyped again into an invoicing tool. Every one of those steps is a place where a number gets transposed or a job quietly goes missing.\n\nWhen people say they want AI, what they usually want is for the retyping to stop. The interesting work is not picking a clever model. It is mapping where information actually enters the business, where a human is genuinely making a judgement call, and where someone is just moving text from one box to another. Automate the second kind and leave the first alone.\n\nThat distinction is worth more than any specific tool, and it is the first thing I look for on a discovery call. Businesses that get it right free up hours a week and stop losing orders in the gaps. Businesses that skip it end up with a chatbot nobody uses bolted onto the same broken process, and conclude that AI does not work for them.\n\nThe uncomfortable part is that the mapping is unglamorous. It looks like sitting with the person who does the retyping and watching them work for an hour. No demo, no model selection, no architecture diagram. But it is the step that decides whether the rest of the project is worth doing at all.", "transcript": "Right, so this is the weekly ops call, seventh of September. Three things on the list.\n\nFirst, the Jordbro warehouse. We are still seeing pick errors on the chilled lines, about two percent, which is roughly double where we were in June. Anna went through the last thirty and reckons most of them trace back to stock being moved without a scan. So the system sends the picker to a location that is already empty. Fix is not technology, it is getting the scan discipline back. Anna is running a refresher with the late shift on Thursday.\n\nSecond, the November push. Sales are forecasting somewhere between thirty and forty percent above a normal month for weeks 45 through 48. Current headcount does not cover that. Erik is going to price up agency cover versus overtime and bring numbers to next week. My instinct is we decide this by the end of the month or we will not get the good agency people.\n\nThird, the supplier situation. Two of the chilled suppliers have missed the shelf life requirement twice each this quarter. Under the procedure that puts them into a review, not automatic delisting. I want the review done properly this time with a named contact on both sides, because last year we let this drift and it cost us in the autumn.\n\nActions then. Anna on the scan refresher. Erik on the staffing numbers for next week. I will handle the supplier reviews. Anything else? No. Good, thanks everyone."}</script>
+<script type="application/json" id="samples">{"opinion": "De flesta mindre företag har inget AI-problem. De har ett rörmokeriproblem. Order kommer in via mejl, knappas in i ett kalkylblad och knappas sedan in igen i faktureringssystemet. Varje sådant steg är ett ställe där en siffra blir fel eller ett jobb tyst försvinner.\n\nNär folk säger att de vill ha AI är det oftast inknappandet de vill bli av med. Det intressanta arbetet är inte att välja en smart modell. Det är att kartlägga var information faktiskt kommer in i verksamheten, var en människa verkligen gör en bedömning, och var någon bara flyttar text från en ruta till en annan. Automatisera det andra och lämna det första ifred.\n\nDen skillnaden är värd mer än något enskilt verktyg, och det är det första jag letar efter i ett första samtal. Företag som får det rätt frigör timmar i veckan och slutar tappa order i glappen. Företag som hoppar över det står till slut med en chatbot ingen använder, fastskruvad på samma trasiga process, och drar slutsatsen att AI inte fungerar för dem.\n\nDet obekväma är att kartläggningen är oglamorös. Den ser ut som att sitta bredvid personen som gör inknappandet och titta på i en timme. Ingen demo, inget modellval, inget arkitekturdiagram. Men det är steget som avgör om resten av projektet är värt att göra över huvud taget.", "transcript": "Okej, då kör vi. Veckans driftsmöte, sjunde september. Tre punkter på listan.\n\nFörst lagret i Jordbro. Vi ser fortfarande plockfel på kylvarorna, runt två procent, vilket är ungefär dubbelt mot var vi låg i juni. Anna har gått igenom de senaste trettio och menar att de flesta går tillbaka till att varor flyttas utan att skannas. Då skickar systemet plockaren till en plats som redan är tom. Lösningen är inte teknik, det handlar om att få tillbaka skanndisciplinen. Anna kör en genomgång med kvällsskiftet på torsdag.\n\nSedan novemberpuckeln. Försäljning prognosticerar någonstans mellan trettio och fyrtio procent över en normal månad för vecka 45 till 48. Nuvarande bemanning räcker inte. Erik tar fram vad bemanningsföretag kostar jämfört med övertid och kommer med siffror till nästa vecka. Min känsla är att vi måste bestämma oss innan månaden är slut, annars får vi inte de bra konsulterna.\n\nTredje punkten, leverantörerna. Två av kylleverantörerna har missat hållbarhetskravet två gånger var det här kvartalet. Enligt rutinen innebär det en översyn, inte automatisk avlistning. Jag vill att översynen görs ordentligt den här gången med en namngiven kontakt på båda sidor, för förra året lät vi det rinna ut i sanden och det kostade oss i höstas.\n\nÅtgärder då. Anna på skanngenomgången. Erik på bemanningssiffrorna till nästa vecka. Jag tar leverantörsöversynerna. Något mer? Nej. Bra, tack allihop."}</script>
 <script>
   const textarea = document.getElementById("content");
   const examples = document.getElementById("examples");
@@ -161,14 +158,14 @@
     foot.className = "out-card-foot";
     const copyBtn = document.createElement("button");
     copyBtn.className = "btn btn-small";
-    copyBtn.textContent = "Copy";
+    copyBtn.textContent = "Kopiera";
     copyBtn.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(text);
-        copyBtn.textContent = "Copied";
-        setTimeout(() => { copyBtn.textContent = "Copy"; }, 1500);
+        copyBtn.textContent = "Kopierat";
+        setTimeout(() => { copyBtn.textContent = "Kopiera"; }, 1500);
       } catch (err) {
-        copyBtn.textContent = "Could not copy";
+        copyBtn.textContent = "Kunde inte kopiera";
       }
     });
     foot.appendChild(copyBtn);
@@ -190,13 +187,13 @@
     errorEl.hidden = true;
     resultsEl.hidden = true;
     if (!content) {
-      errorEl.textContent = "Paste in some content first.";
+      errorEl.textContent = "Klistra in en text först.";
       errorEl.hidden = false;
       return;
     }
 
     goBtn.disabled = true;
-    goBtn.textContent = "Repurposing";
+    goBtn.textContent = "Skapar";
 
     try {
       const res = await fetch("/api/repurpose", {
@@ -207,7 +204,7 @@
       const data = await res.json();
 
       if (!res.ok) {
-        errorEl.textContent = data.error || "Something went wrong.";
+        errorEl.textContent = data.error || "Något gick fel.";
         errorEl.hidden = false;
         return;
       }
@@ -222,11 +219,11 @@
       resultsEl.hidden = false;
       resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (err) {
-      errorEl.textContent = "Could not reach the server. Check your connection and try again.";
+      errorEl.textContent = "Kunde inte nå servern. Kontrollera din anslutning och försök igen.";
       errorEl.hidden = false;
     } finally {
       goBtn.disabled = false;
-      goBtn.textContent = "Repurpose";
+      goBtn.textContent = "Skapa";
     }
   });
 </script>

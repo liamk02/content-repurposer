@@ -35,7 +35,10 @@ Rules:
   characters, no hashtags unless the source content uses them itself
 - Do not invent facts, numbers, or claims not present in the source content
 - Match the source's tone (casual stays casual, technical stays technical)
-- Plain text only in every field - no markdown formatting"""
+- Plain text only in every field - no markdown formatting
+- Write EVERY field in Swedish, whatever language the source text is in.
+  If the source is Swedish, keep its wording and terminology where you can
+  rather than paraphrasing it into different words."""
 
 
 def extract_json(text: str) -> dict:
@@ -77,9 +80,9 @@ def repurpose():
     content = (data.get("content") or "").strip()
 
     if not content:
-        return jsonify({"error": "Paste in some content first."}), 400
+        return jsonify({"error": "Klistra in en text först."}), 400
     if len(content) > MAX_CONTENT_CHARS:
-        return jsonify({"error": f"Content too long (max {MAX_CONTENT_CHARS} characters for this demo)."}), 400
+        return jsonify({"error": f"Texten är för lång (max {MAX_CONTENT_CHARS} tecken i den här demon)."}), 400
 
     try:
         response = client.messages.create(
@@ -100,18 +103,18 @@ def repurpose():
             raise ValueError(f"Model returned unexpected shape: {result}")
 
     except anthropic.RateLimitError:
-        return jsonify({"error": "Busy right now - try again shortly."}), 429
+        return jsonify({"error": "Upptaget just nu - försök igen om en stund."}), 429
     except anthropic.APIStatusError as e:
-        return jsonify({"error": f"API error: {e.message}"}), 502
+        return jsonify({"error": f"API-fel: {e.message}"}), 502
     except (ValueError, json.JSONDecodeError):
-        return jsonify({"error": "Could not repurpose that content - try again."}), 502
+        return jsonify({"error": "Kunde inte bearbeta texten - försök igen."}), 502
 
     return jsonify(result)
 
 
 @app.errorhandler(429)
 def rate_limited(_e):
-    return jsonify({"error": "Rate limit reached - try again in a bit."}), 429
+    return jsonify({"error": "Gränsen för antal anrop är nådd - försök igen om en stund."}), 429
 
 
 if __name__ == "__main__":
